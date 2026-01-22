@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Toolkit Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f0f0f, #1a1a2e);
+            color: #00ff00;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #00ff00;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .header::before {
+            content: "■▲◆";
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff0000;
+            font-size: 24px;
+        }
+        
+        .header::after {
+            content: "◆▲■";
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff0000;
+            font-size: 24px;
+        }
+        
+        h1 {
+            color: #00ff00;
+            font-size: 28px;
+            text-shadow: 0 0 10px #00ff00;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #ff3333;
+            font-size: 14px;
+            letter-spacing: 2px;
+        }
+        
+        .status-bar {
+            background: #111;
+            border: 1px solid #333;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #00ff00;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .terminal {
+            background: #000;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            min-height: 200px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        
+        .terminal-line {
+            margin-bottom: 5px;
+            color: #00ff00;
+        }
+        
+        .terminal-command {
+            color: #ffff00;
+        }
+        
+        .terminal-error {
+            color: #ff0000;
+        }
+        
+        .terminal-success {
+            color: #00ff00;
+        }
+        
+        .input-section {
+            margin: 20px 0;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #00ff00;
+            font-size: 14px;
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            background: #111;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            color: #00ff00;
+            font-size: 14px;
+        }
+        
+        textarea {
+            height: 80px;
+            resize: vertical;
+        }
+        
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .tool-card {
+            background: rgba(0, 20, 0, 0.3);
+            border: 1px solid #00ff00;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 255, 0, 0.2);
+            background: rgba(0, 30, 0, 0.5);
+        }
+        
+        .tool-card.active {
+            border-color: #ff0000;
+            background: rgba(30, 0, 0, 0.5);
+        }
+        
+        .tool-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .tool-title {
+            color: #ffff00;
+            font-size: 18px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .tool-desc {
+            color: #cccccc;
+            font-size: 12px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .btn-start {
+            background: linear-gradient(45deg, #ff0000, #990000);
+            color: white;
+        }
+        
+        .btn-start:hover {
+            background: linear-gradient(45deg, #ff3333, #cc0000);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+        }
+        
+        .btn-stop {
+            background: linear-gradient(45deg, #333, #000);
+            color: #00ff00;
+        }
+        
+        .btn-stop:hover {
+            background: linear-gradient(45deg, #444, #111);
+        }
+        
+        .btn-clear {
+            background: linear-gradient(45deg, #ff9900, #cc6600);
+            color: black;
+        }
+        
+        .btn-clear:hover {
+            background: linear-gradient(45deg, #ffcc00, #ff9900);
+        }
+        
+        .progress-container {
+            margin: 20px 0;
+            background: #111;
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid #333;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #ffff00;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            background: #222;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0000, #00ff00);
+            width: 0%;
+            transition: width 0.5s;
+            border-radius: 10px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            color: #ffff00;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #cccccc;
+            margin-top: 5px;
+        }
+        
+        .warning {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid #ff0000;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+            color: #ff9999;
+            font-size: 12px;
+        }
+        
+        .disclaimer {
+            color: #ff0000;
+            font-size: 11px;
+            text-align: center;
+            margin-top: 30px;
+            border-top: 1px solid #333;
+            padding-top: 15px;
+        }
+        
+        /* Animasi khusus */
+        .hacking-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        
+        .matrix-code {
+            color: #00ff00;
+            font-size: 14px;
+            position: absolute;
+            animation: fall linear infinite;
+        }
+        
+        @keyframes fall {
+            0% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .tool-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animasi Matrix -->
+    <div class="hacking-animation" id="matrixRain"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>WHATSAPP TOOLKIT PRO</h1>
+            <div class="subtitle">DARK MODE v2.7 - SYSTEM ACTIVE</div>
+        </div>
+        
+        <div class="status-bar">
+            <div class="status-item">
+                <div class="status-dot"></div>
+                <span>SYSTEM: ONLINE</span>
+            </div>
+            <div class="status-item">
+                <span>SESSION: <span id="sessionId">WA-TOOL-7X3K9P</span></span>
+            </div>
+            <div class="status-item">
+                <span>TIME: <span id="currentTime">00:00:00</span></span>
+            </div>
+        </div>
+        
+        <!-- Terminal Output -->
+        <div class="terminal" id="terminal">
+            <div class="terminal-line">[SYSTEM] WhatsApp Toolkit Pro v2.7 initialized...</div>
+            <div class="terminal-line">[SYSTEM] Loading modules...</div>
+            <div class="terminal-line terminal-success">[SUCCESS] OTP Spam Module loaded</div>
+            <div class="terminal-line terminal-success">[SUCCESS] WhatsApp Spam Module loaded</div>
+            <div class="terminal-line terminal-success">[SUCCESS] Virtex Generator loaded</div>
+            <div class="terminal-line terminal-success">[SUCCESS] Crash Module loaded</div>
+            <div class="terminal-line">[READY] Select tool and enter target information</div>
+        </div>
+        
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="smsSent">0</div>
+                <div class="stat-label">OTP SMS SENT</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="waMessages">0</div>
+                <div class="stat-label">WA MESSAGES</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="virtexGen">0</div>
+                <div class="stat-label">VIRTEX GENERATED</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="targetsHit">0</div>
+                <div class="stat-label">TARGETS HIT</div>
+            </div>
+        </div>
+        
+        <!-- Input Target -->
+        <div class="input-section">
+            <div class="input-group">
+                <label for="targetNumber">TARGET WHATSAPP NUMBER</label>
+                <input type="text" id="targetNumber" placeholder="+62XXXXXXXXXXX" maxlength="15">
+            </div>
+            <div class="input-group">
+                <label for="customMessage">CUSTOM MESSAGE (Optional)</label>
+                <textarea id="customMessage" placeholder="Enter custom message for spam..."></textarea>
+            </div>
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-label">
+                <span>ATTACK PROGRESS</span>
+                <span id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+        
+        <!-- Tool Grid -->
+        <div class="tool-grid">
+            <!-- Tool 1: OTP Spam -->
+            <div class="tool-card" onclick="selectTool(1)" id="tool1">
+                <div class="tool-icon">📱</div>
+                <div class="tool-title">OTP SPAM ATTACK</div>
+                <div class="tool-desc">Flood target with OTP SMS from various services</div>
+                <div class="input-group">
+                    <label for="otpCount">Number of OTP Requests</label>
+                    <input type="number" id="otpCount" min="1" max="100" value="10">
+                </div>
+                <div class="button-group">
+                    <button class="btn-start" onclick="startOTPSpam()">START ATTACK</button>
+                    <button class="btn-stop" onclick="stopAll()">STOP</button>
+                </div>
+            </div>
+            
+            <!-- Tool 2: WhatsApp Spam -->
+            <div class="tool-card" onclick="selectTool(2)" id="tool2">
+                <div class="tool-icon">💬</div>
+                <div class="tool-title">WHATSAPP SPAM</div>
+                <div class="tool-desc">Send massive messages to target WhatsApp</div>
+                <div class="input-group">
+                    <label for="spamCount">Message Count</label>
+                    <input type="number" id="spamCount" min="1" max="500" value="50">
+                </div>
+                <div class="button-group">
+                    <button class="btn-start" onclick="startWASpam()">SPAM NOW</button>
+                    <button class="btn-stop" onclick="stopAll()">STOP</button>
+                </div>
+            </div>
+            
+            <!-- Tool 3: Virtex Generator -->
+            <div class="tool-card" onclick="selectTool(3)" id="tool3">
+                <div class="tool-icon">⚡</div>
+                <div class="tool-title">VIRTEX GENERATOR</div>
+                <div class="tool-desc">Generate malicious payload for WhatsApp</div>
+                <div class="input-group">
+                    <label for="virtexType">Virtex Type</label>
+                    <select id="virtexType" style="width:100%;padding:10px;background:#111;color:#00ff00;border:1px solid #00ff00;">
+                        <option value="crash">Crash Virtex</option>
+                        <option value="spam">Spam Virtex</option>
+                        <option value="loop">Infinite Loop</option>
+                        <option value="freeze">Freeze Device</option>
+                    </select>
+                </div>
+                <div class="button-group">
+                    <button class="btn-start" onclick="generateVirtex()">GENERATE</button>
+                    <button class="btn-clear" onclick="clearVirtex()">CLEAR</button>
+                </div>
+            </div>
+            
+            <!-- Tool 4: Crash WhatsApp -->
+            <div class="tool-card" onclick="selectTool(4)" id="tool4">
+                <div class="tool-icon">💥</div>
+                <div class="tool-title">CRASH ATTACK</div>
+                <div class="tool-desc">Force crash WhatsApp on target device</div>
+                <div class="input-group">
+                    <label for="crashMethod">Attack Method</label>
+                    <select id="crashMethod" style="width:100%;padding:10px;background:#111;color:#00ff00;border:1px solid #00ff00;">
+                        <option value="buffer">Buffer Overflow</option>
+                        <option value="memory">Memory Flood</option>
+                        <option value="resource">Resource Exhaustion</option>
+                        <option value="null">Null Pointer</option>
+                    </select>
+                </div>
+                <div class="button-group">
+                    <button class="btn-start" onclick="startCrash()">CRASH NOW</button>
+                    <button class="btn-stop" onclick="stopAll()">ABORT</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Warning -->
+        <div class="warning">
+            ⚠️ WARNING: This tool is for educational purposes only. Unauthorized access to computer systems is illegal. Use only on devices you own or have permission to test.
+        </div>
+        
+        <!-- Disclaimer -->
+        <div class="disclaimer">
+            © 2024 WhatsApp Toolkit Pro - Dark Edition<br>
+            This is a simulation tool. No actual attacks are performed.<br>
+            All operations are simulated locally in your browser.
+        </div>
+    </div>
+
+    <script>
+        // Variabel global
+        let currentTool = 1;
+        let attackActive = false;
+        let progress = 0;
+        let stats = {
+            smsSent: 0,
+            waMessages: 0,
+            virtexGen: 0,
+            targetsHit: 0
+        };
+        
+        // Inisialisasi
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTime();
+            setInterval(updateTime, 1000);
+            createMatrixRain();
+            selectTool(1);
+        });
+        
+        // Update waktu realtime
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            document.getElementById('currentTime').textContent = timeString;
+        }
+        
+        // Animasi Matrix Rain
+        function createMatrixRain() {
+            const container = document.getElementById('matrixRain');
+            const chars = '01アイウエオカキクケコABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            
+            for(let i = 0; i < 50; i++) {
+                const code = document.createElement('div');
+                code.className = 'matrix-code';
+                code.textContent = chars.charAt(Math.floor(Math.random() * chars.length));
+                code.style.left = Math.random() * 100 + 'vw';
+                code.style.animationDuration = (Math.random() * 5 + 3) + 's';
+                code.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(code);
+                
+                // Hapus setelah animasi selesai
+                setTimeout(() => {
+                    code.remove();
+                }, 10000);
+            }
+            
+            // Buat terus menerus
+            setTimeout(createMatrixRain, 1000);
+        }
+        
+        // Pilih tool
+        function selectTool(toolNumber) {
+            currentTool = toolNumber;
+            
+            // Reset semua card
+            document.querySelectorAll('.tool-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Aktifkan card yang dipilih
+            document.getElementById(`tool${toolNumber}`).classList.add('active');
+            
+            // Update terminal
+            addToTerminal(`[SYSTEM] Tool ${toolNumber} selected`);
+        }
+        
+        // Tambah pesan ke terminal
+        function addToTerminal(message, type = 'normal') {
+            const terminal = document.getElementById('terminal');
+            const line = document.createElement('div');
+            line.className = `terminal-line ${type}`;
+            line.textContent = message;
+            terminal.appendChild(line);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+        
+        // Update progress bar
+        function updateProgress(value) {
+            progress = Math.min(100, Math.max(0, value));
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressPercent').textContent = progress + '%';
+        }
+        
+        // Update statistik
+        function updateStats() {
+            document.getElementById('smsSent').textContent = stats.smsSent;
+            document.getElementById('waMessages').textContent = stats.waMessages;
+            document.getElementById('virtexGen').textContent = stats.virtexGen;
+            document.getElementById('targetsHit').textContent = stats.targetsHit;
+        }
+        
+        // ===== TOOL 1: OTP SPAM =====
+        function startOTPSpam() {
+            const target = document.getElementById('targetNumber').value;
+            const count = parseInt(document.getElementById('otpCount').value) || 10;
+            
+            if(!target || target.length < 10) {
+                addToTerminal('[ERROR] Please enter a valid WhatsApp number', 'terminal-error');
+                return;
+            }
+            
+            attackActive = true;
+            stats.targetsHit++;
+            updateStats();
+            
+            addToTerminal(`[OTP ATTACK] Starting OTP spam on ${target}`, 'terminal-command');
+            addToTerminal(`[OTP ATTACK] Requesting ${count} OTP codes...`);
+            
+            let completed = 0;
+            const services = ['Gojek', 'Grab', 'Tokopedia', 'Shopee', 'OVO', 'Dana', 'WhatsApp', 'Telegram', 'Facebook', 'Instagram', 'Twitter', 'Google'];
+            
+            const interval = setInterval(() => {
+                if(!attackActive || completed >= count) {
+                    clearInterval(interval);
+                    addToTerminal(`[OTP ATTACK] Finished. Total ${completed} OTP requests sent.`, 'terminal-success');
+                    updateProgress(0);
+                    return;
+                }
+                
+                const service = services[Math.floor(Math.random() * services.length)];
+                const otp = Math.floor(100000 + Math.random() * 900000);
+                
+                addToTerminal(`[OTP] ${service} code ${otp} sent to ${target}`);
+                stats.smsSent++;
+                updateStats();
+                
+                completed++;
+                progress = (completed / count) * 100;
+                updateProgress(progress);
+                
+                if(completed >= count) {
+                    clearInterval(interval);
+                    attackActive = false;
+                    addToTerminal(`[OTP ATTACK] Attack completed successfully!`, 'terminal-success');
+                    updateProgress(100);
+                }
+            }, 1000);
+            
+            // Auto stop setelah 30 detik
+            setTimeout(() => {
+                if(attackActive) {
+                    stopAll();
+                    addToTerminal('[SYSTEM] Auto-stopped after 30 seconds', 'terminal-success');
+                }
+            }, 30000);
+        }
+        
+        // ===== TOOL 2: WhatsApp Spam =====
+        function startWASpam() {
+            const target = document.getElementById('targetNumber').value;
+            const count = parseInt(document.getElementById('spamCount').value) || 50;
+            const customMessage = document.getElementById('customMessage').value || 
+                "This is an automated message from WhatsApp Toolkit Pro! 🚀";
+            
+            if(!target || target.length < 10) {
+                addToTerminal('[ERROR] Please enter a valid WhatsApp number', 'terminal-error');
+                return;
+            }
+            
+            attackActive = true;
+            stats.targetsHit++;
+            updateStats();
+            
+            addToTerminal(`[WA SPAM] Starting WhatsApp spam on ${target}`, 'terminal-command');
+            addToTerminal(`[WA SPAM] Sending ${count} messages...`);
+            
+            let sent = 0;
+            const messages = [
+                customMessage,
+                "⚠️ SYSTEM PENETRATION DETECTED ⚠️",
+                "Your WhatsApp security has been compromised!",
+                "🔓 ACCESS GRANTED TO TARGET DEVICE",
+                "📱 DEVICE INFORMATION EXFILTRATED",
+                "📍 LOCATION TRACKING ACTIVATED",
+                "💾 CONTACTS AND MEDIA DOWNLOADED",
+                "🔑 ENCRYPTION KEYS EXTRACTED",
+                "🚨 CRITICAL VULNERABILITY FOUND",
+                "⚡ REMOTE CONTROL ENABLED",
+                "🎯 TARGET LOCKED AND TRACKED",
+                "📤 DATA EXFILTRATION IN PROGRESS",
+                "🔐 BYPASSING SECURITY PROTOCOLS",
+                "💥 EXPLOITING ZERO-DAY VULNERABILITY",
+                "🛡️ FIREWALL BREACH SUCCESSFUL",
+                "📶 CONNECTION HIJACKED",
+                "🎭 MIM ATTACK ACTIVE",
+                "🕵️ STEALTH MODE ENGAGED",
+                "💣 PAYLOAD DELIVERED",
+                "🎪 CIRCUS OF CHAOS ACTIVATED"
+            ];
+            
+            const interval = setInterval(() => {
+                if(!attackActive || sent >= count) {
+                    clearInterval(interval);
+                    addToTerminal(`[WA SPAM] Finished. Total ${sent} messages sent.`, 'terminal-success');
+                    updateProgress(0);
+                    return;
+                }
+                
+                const message = messages[Math.floor(Math.random() * messages.length)];
+                const messageNum = sent + 1;
+                
+                addToTerminal(`[WA SPAM #${messageNum}] "${message.substring(0, 30)}..." sent`);
+                stats.waMessages++;
+                updateStats();
+                
+                sent++;
+                progress = (sent / count) * 100;
+                updateProgress(progress);
+                
+                if(sent >= count) {
+                    clearInterval(interval);
+                    attackActive = false;
+                    addToTerminal(`[WA SPAM] Attack completed successfully!`, 'terminal-success');
+                    updateProgress(100);
+                    
+                    // Generate report
+                    setTimeout(() => {
+                        addToTerminal('[REPORT] Target device may experience:', 'terminal-command');
+                        addToTerminal('[REPORT] - WhatsApp lag/freeze');
+                        addToTerminal('[REPORT] - Battery drain');
+                        addToTerminal('[REPORT] - Notification overload');
+                        addToTerminal('[REPORT] - Possible app crash');
+                    }, 1000);
+                }
+            }, 500);
+            
+            // Auto stop setelah 60 detik
+            setTimeout(() => {
+                if(attackActive) {
+                    stopAll();
+                    addToTerminal('[SYSTEM] Auto-stopped after 60 seconds', 'terminal-success');
+                }
+            }, 60000);
+        }
+        
+        // ===== TOOL 3: Virtex Generator =====
+        function generateVirtex() {
+            const type = document.getElementById('virtexType').value;
+            stats.virtexGen++;
+            updateStats();
+            
+            const virtexTypes = {
+                crash: {
+                    name: "CRASH VIRTEX",
+                    code: `// WhatsApp Crash Payload
+function crashWhatsApp() {
+    const overflow = Array(1000000).fill('💥');
+    while(true) {
+        window.open('whatsapp://send?text=' + overflow.join(''));
+        localStorage.setItem('crash', overflow);
+        sessionStorage.setItem('exploit', overflow);
+    }
+}`,
+                    desc: "Causes immediate WhatsApp crash by memory exhaustion"
+                },
+                spam: {
+                    name: "SPAM VIRTEX",
+                    code: `// Infinite Notification Generator
+setInterval(() => {
+    const notif = new Notification('⚠️ SECURITY ALERT', {
+        body: 'WhatsApp security compromised!',
+        icon: 'data:image/svg+xml;base64,...'
+    });
+    
+    // Send silent messages
+    fetch('whatsapp://send?phone=TARGET&text=' + encodeURIComponent('🔓'));
+}, 100);`,
+                    desc: "Generates infinite notifications and background messages"
+                },
+                loop: {
+                    name: "INFINITE LOOP VIRTEX",
+                    code: `// WhatsApp Freeze Loop
+(function() {
+    const elements = document.querySelectorAll('*');
+    while(true) {
+        for(let el of elements) {
+            el.style.animation = 'none';
+            el.offsetHeight;
+            el.style.animation = null;
+        }
+        window.open('whatsapp://', '_blank');
+    }
+})();`,
+                    desc: "Creates infinite loop freezing WhatsApp interface"
+                },
+                freeze: {
+                    name: "DEVICE FREEZE VIRTEX",
+                    code: `// Device Freeze Payload
+const workers = [];
+for(let i = 0; i < 100; i++) {
+    workers.push(new Worker(URL.createObjectURL(
+        new Blob(['while(true){}'], {type: 'application/javascript'})
+    )));
+}
+
+// GPU overload
+const canvas = document.createElement('canvas');
+const ctx = canvas.getContext('webgl');
+while(true) {
+    ctx.clear(ctx.COLOR_BUFFER_BIT);
+}`,
+                    desc: "Freezes entire device by overloading CPU/GPU"
+                }
+            };
+            
+            const virtex = virtexTypes[type];
+            
+            addToTerminal(`[VIRTEX] Generating ${virtex.name}...`, 'terminal-command');
+            addToTerminal(`[VIRTEX] Type: ${virtex.desc}`);
+            addToTerminal(`[VIRTEX] Payload Code:`, 'terminal-command');
+            addToTerminal(virtex.code);
+            addToTerminal(`[VIRTEX] Payload generated successfully!`, 'terminal-success');
+            addToTerminal(`[VIRTEX] Copy code and inject into target WhatsApp web session`);
+            
+            // Simpan ke clipboard
+            navigator.clipboard.writeText(virtex.code).then(() => {
+                addToTerminal('[SYSTEM] Payload copied to clipboard!', 'terminal-success');
+            });
+        }
+        
+        function clearVirtex() {
+            addToTerminal('[VIRTEX] Payload cleared from memory', 'terminal-success');
+        }
+        
+        // ===== TOOL 4: Crash WhatsApp =====
+        function startCrash() {
+            const method = document.getElementById('crashMethod').value;
+            const target = document.getElementById('targetNumber').value;
+            
+            if(!target || target.length < 10) {
+                addToTerminal('[ERROR] Please enter a valid WhatsApp number', 'terminal-error');
+                return;
+            }
+            
+            attackActive = true;
+            stats.targetsHit++;
+            updateStats();
+            
+            const methods = {
+                buffer: "Buffer Overflow Attack",
+                memory: "Memory Flood Attack",
+                resource: "Resource Exhaustion",
+                null: "Null Pointer Exploit"
+            };
+            
+            addToTerminal(`[CRASH] Starting ${methods[method]} on ${target}`, 'terminal-command');
+            addToTerminal(`[CRASH] Exploiting WhatsApp vulnerability CVE-2024-32896...`);
+            
+            let step = 0;
+            const steps = [
+                "Initializing exploit framework...",
+                "Bypassing WhatsApp encryption...",
+                "Injecting malicious payload...",
+                "Triggering buffer overflow...",
+                "Overwriting memory addresses...",
+                "Executing shellcode...",
+                "Gaining root access...",
+                "Deploying crash module...",
+                "Sending kill signal to WhatsApp...",
+                "Cleaning attack traces..."
+            ];
+            
+            const interval = setInterval(() => {
+                if(!attackActive || step >= steps.length) {
+                    clearInterval(interval);
+                    if(step >= steps.length) {
+                        addToTerminal(`[CRASH] Attack completed! Target WhatsApp should crash.`, 'terminal-success');
+                        updateProgress(100);
+                        
+                        // Simulate crash effects
+                        setTimeout(() => {
+                            addToTerminal('[EFFECTS] Target device experiencing:', 'terminal-command');
+                            addToTerminal('[EFFECTS] - WhatsApp force closing');
+                            addToTerminal('[EFFECTS] - App not responding');
+                            addToTerminal('[EFFECTS] - Possible reboot required');
+                            addToTerminal('[EFFECTS] - Data corruption possible');
+                        }, 1000);
+                    }
+                    return;
+                }
+                
+                addToTerminal(`[CRASH STEP ${step+1}] ${steps[step]}`);
+                step++;
+                progress = (step / steps.length) * 100;
+                updateProgress(progress);
+                
+                if(step >= steps.length) {
+                    clearInterval(interval);
+                    attackActive = false;
+                }
+            }, 1500);
+            
+            // Auto stop
+            setTimeout(() => {
+                if(attackActive) {
+                    stopAll();
+                    addToTerminal('[SYSTEM] Attack sequence completed', 'terminal-success');
+                }
+            }, 20000);
+        }
+        
+        // Stop semua attack
+        function stopAll() {
+            attackActive = false;
+            updateProgress(0);
+            addToTerminal('[SYSTEM] All attacks stopped', 'terminal-success');
+        }
+        
+        // Validasi input
+        document.getElementById('targetNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if(value.startsWith('0')) {
+                value = '+62' + value.substring(1);
+            }
+            e.target.value = value.substring(0, 15);
+        });
+        
+        // Hotkeys
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+Q untuk stop
+            if(e.ctrlKey && e.key === 'q') {
+                stopAll();
+                addToTerminal('[HOTKEY] Ctrl+Q: All attacks stopped', 'terminal-command');
+            }
+            
+            // Ctrl+1-4 untuk pilih tool
+            if(e.ctrlKey && e.key >= '1' && e.key <= '4') {
+                selectTool(parseInt(e.key));
+            }
+        });
+        
+        // Easter egg
+        let konami = [];
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        
+        document.addEventListener('keydown', function(e) {
+            konami.push(e.key);
+            if(konami.length > konamiCode.length) {
+                konami.shift();
+            }
+            
+            if(konami.join(',') === konamiCode.join(',')) {
+                addToTerminal('[SECRET] 🎮 KONAMI CODE ACTIVATED!', 'terminal-command');
+                addToTerminal('[SECRET] Unlocking ultimate mode...', 'terminal-command');
+                document.body.style.background = 'linear-gradient(135deg, #ff0000, #000000)';
+                setTimeout(() => {
+                    document.body.style.background = 'linear-gradient(135deg, #0f0f0f, #1a1a2e)';
+                }, 5000);
+                konami = [];
+            }
+        });
+    </script>
+</body>
+</html>
