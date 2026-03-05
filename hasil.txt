@@ -1,0 +1,9 @@
+--- TARGET RAFIDI-TRACKER ---
+Waktu: 02:44:38
+IP: 103.151.227.59
+ISP: URBANACCESS
+Kota: Pananjung
+Koordinat: -7.6826,108.65
+Maps: https://www.google.com/maps/place/-7.6826,108.65
+-----------------------------
+
